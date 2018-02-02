@@ -1,0 +1,4 @@
+put the udev file to  /etc/udev/rule.d/ folder
+The device will point to the specify name.
+for example:
+$ sudo cp "UDEV_FILE" /etc/udev/rule.d/

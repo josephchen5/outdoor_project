@@ -1,0 +1,7 @@
+----indoor record----------------
+rosbag record /scan /imu_data /base_odam /initalpose
+
+---outdoor record----------------
+rosbag record /scan /imu /base_odom  /GPS/ublox_gps/fix /ublox_gps/fix
+
+

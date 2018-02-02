@@ -1,0 +1,38 @@
+Launch Command:
+Nav:
+	Odroid:
+		indoor:
+			if use TEB with cmd_vel_to_ackermann_drive :
+				$ roslaunch lynmax Lynmax_RaceCar_Nav.launch use_teb:=true
+			if use L1:
+				$ roslaunch lynmax Lynmax_RaceCar_Nav.launch use_teb:=false
+	        outdoor:
+			if use TEB with cmd_vel_to_ackermann_drive :
+				$ roslaunch lynmax Lynmax_RaceCar_Nav_GPSIMU.launch  use_teb:=true
+			if use L1:
+				$ roslaunch lynmax Lynmax_RaceCar_Nav_GPSIMU.launch  use_teb:=false
+                        for test gps only:
+				$ roslaunch lynmax ublox_device.launch.xml
+					#check GPS topic  $ rostopic echo /ublox_gps/fix
+
+	PC:
+		joystick:
+			xbox:
+				$ roslaunch lynmax Lynmax_RaceCar_xbox_teleop.launch
+				 #config file (xbox_joy_teleop.yaml) can change the max speed and angle
+				 #use push "Button of left stick" and move  "left stick" to control the car, release  "Button of left stick" 					  and push "RB Button" with move "left stick" to control the car to have higer speed.
+				
+			wii:
+				$ roslaunch lynmax Lynmax_RaceCar_wii_teleop.launch
+				  # In launch file (Lynmax_RaceCar_wii_teleop.launch) can modify the max speed and angle.	
+		
+	
+		multi-goals:
+			Define goals:
+				Open launch file: Lynmax_RaceCar_Multi_Goals
+				Add x coordinates of goals to "goalListX" params list
+				Add y coordinates of goals to "goalListY" params list
+			Execute:
+				$ roslaunch lynmax Lynmax_RaceCar_Nav.launch
+				$ roslaunch lynmax Lynmax_RaceCar_Multi_Goals
+			

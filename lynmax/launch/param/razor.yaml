@@ -1,0 +1,34 @@
+## USB port
+port: /dev/gy85
+
+
+##### Calibration ####
+### accelerometer
+accel_x_min: -267.0
+accel_x_max: 247.0
+accel_y_min: -263.0
+accel_y_max: 273.0
+accel_z_min: -266.0
+accel_z_max: 250.0
+
+### magnetometer
+# standard calibration
+magn_x_min: -711.0
+magn_x_max: 272.0
+magn_y_min: -254.0
+magn_y_max: 888.0
+magn_z_min: -32.0
+magn_z_max: 781.0
+
+# extended calibration
+calibration_magn_use_extended: true
+magn_ellipsoid_center: [-224.835, 309.666, 383.714]
+magn_ellipsoid_transform: [[0.803488, 0.0470076, -0.0414520], [0.0470076, 0.703365, 0.0402522], [-0.0414520, 0.0402522, 0.988031]]
+
+# AHRS to robot calibration
+imu_yaw_calibration: 10
+
+### gyroscope
+gyro_average_offset_x: -14.54
+gyro_average_offset_y: 46.46
+gyro_average_offset_z: 2.58

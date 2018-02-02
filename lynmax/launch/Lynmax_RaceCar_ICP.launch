@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<launch>
+    <!-- arguments -->    
+    <arg name="use_teb"  default="false" />
+    <arg name="use_enc"  default="false" />
+    <arg name="VtoRPM"   default="1660" />
+
+    <!-- Odom EKF -->
+    <include file="$(find lynmax)/launch/includes/laser_odom_ekf.launch.xml" >
+    	<arg name="use_teb" value="$(arg use_teb)"/>
+        <arg name="use_enc" value="$(arg use_enc)"/>
+        <arg name="VtoRPM"  value="$(arg VtoRPM)"/>
+    </include>
+
+    <!-- MRPT ICP -->
+    <node pkg="lynmax" type="scan_intensities.py" name="scan_intensities"/>
+        <!--PARAMETERS-->
+        <param name="ini_filename" value="$(find mrpt_icp_slam_2d)/tutorial/icp_slam_demo.ini"/>
+        <param name="odom_frame_id" value="/odom"/>
+        <param name="global_frame_id" value="/map"/>
+        <param name="base_frame_id" value="/laser"/>
+        <param name="sensor_source" value="/scan_out"/>
+        <env name="ROSCONSOLE_CONFIG_FILE" value="$(find mrpt_icp_slam_2d)/config/rosconsole.config"/>
+    <!--SLAM RUN-->
+    <node pkg="mrpt_icp_slam_2d" type="mrpt_icp_slam_2d" name="mrpt_icp_slam_2d" output="screen"></node>
+
+</launch>

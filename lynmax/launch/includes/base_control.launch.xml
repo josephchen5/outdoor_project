@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<launch>
+    <arg name="use_teb" default="true" />
+    <arg name="VtoRPM" default="1660" />
+
+    <node name="base_control"   pkg="lynmax"  type="base_control.py" output="screen" if="$(arg use_teb)" >
+     <param name="port"       value="/dev/uno"/>  
+     <param name="base_id"  value="base_link"/>
+     <param name="baudrate"   value="57600"/>
+     <param name="VtoRPM"   value="$(arg VtoRPM)"/>
+    </node>
+    
+    <node name="cmd_vel_to_ackermann_drive"   pkg="lynmax"  type="cmd_vel_to_ackermann_drive.py" output="screen" if="$(arg use_teb)"  >
+    </node>
+
+    <node name="base_control"   pkg="lynmax"  type="base_control_L1.py" output="screen" unless="$(arg use_teb)" >
+    <param name="port"       value="/dev/uno"/>  
+    <param name="base_id"  value="base_link"/>
+    <param name="baudrate"   value="57600"/>
+    <param name="VtoRPM"   value="$(arg VtoRPM)" />
+    </node>
+
+
+</launch>

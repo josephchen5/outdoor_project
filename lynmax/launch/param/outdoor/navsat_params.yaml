@@ -1,0 +1,11 @@
+navsat_transform:
+  frequency: 15
+  delay: 10     #The time, in seconds, to wait before calculating the transform from GPS coordinates to your robot’s world frame.
+  magnetic_declination_radians: 0.077 #Enter the magnetic declination for your location. 
+                                      #see http://www.ngdc.noaa.gov/geomag-web (make sure to convert the value to radians)
+  yaw_offset:   -1.570796327 #Your IMU should read 0 for yaw when facing east. 
+  zero_altitude: true        #If this is true, the nav_msgs/Odometry message produced by this node has its pose Z value set to 0.
+  broadcast_utm_transform: true
+  publish_filtered_gps: true
+  use_odometry_yaw: false
+  wait_for_datum: false

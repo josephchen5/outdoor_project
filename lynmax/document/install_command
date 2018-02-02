@@ -1,0 +1,15 @@
+pc:
+	sudo apt-get install ros-kinetic-teleop-twist-joy 
+	sudo apt-get install ros-kinetic-joystick-drivers 
+
+	cd catkin_ws/src/
+	git clone https://github.com/gareth-cross/rviz_satellite.git
+
+odroid xu4:
+	cd catkin_ws/src/
+	git clone https://github.com/KumarRobotics/ublox.git
+
+For "VtoRPM" parameter:
+    Replace <arg name="VtoRPM" default="1660" /> with "1440"
+    Equation: velocity * sec* ratio/(D*pi)=rpm
+              1 * 60* 8.9/(0.118*3.1415)=1440

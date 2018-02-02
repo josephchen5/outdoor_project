@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+
+<launch>
+    <arg name="use_teb" default="true" />
+    <arg name="VtoRPM" default="1660" />
+    <rosparam command="load" file="$(find lynmax)/launch/param/outdoor/GPSIMU_ekf_params.yaml" />
+    <rosparam command="load" file="$(find lynmax)/launch/param/outdoor/navsat_params.yaml" />
+
+    <!-- TF setting -->
+    <include file="$(find lynmax)/launch/includes/racecar_tf.launch.xml" />
+
+    <!-- SENSOR DEVICE -->
+    <!-- RPLidar -->
+    <include file="$(find lynmax)/launch/includes/rplidar.launch.xml" />
+    <!-- IMU -->
+    <include file="$(find lynmax)/launch/includes/razor-pub.launch.xml" />
+    <!-- base -->
+    <include file="$(find lynmax)/launch/includes/base_control.launch.xml" >
+    		<arg name="use_teb" value="$(arg use_teb)"/>
+		<arg name="VtoRPM" value="$(arg VtoRPM)"/>
+    </include>
+    <!-- GPS -->
+    <include file="$(find lynmax)/launch/includes/ublox_device.launch.xml" />
+    <node name="GPS_cov"   pkg="lynmax"  type="GPS_cov.py" output="screen"  />
+
+
+    <!-- ODOMETRY -->
+    <!--rf2o_Laser_Odometry-->
+    <include file="$(find lynmax)/launch/includes/rf2o.launch.xml" />
+    <!-- Robot_Localization -->
+    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_se_odom" clear_params="true">
+    </node>
+
+    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_se_map" clear_params="true">
+	<remap from="odometry/filtered" to="odometry/filtered_map"/>
+    </node>
+
+    <node pkg="robot_localization" type="navsat_transform_node" name="navsat_transform" clear_params="true" >
+	<rosparam param="datum">[24.822585, 121.767084, 0.0, map, base_footprint]</rosparam> 
+        <!--latitude in decimal degrees, longitude in decimal degrees, heading in radians)  world frame robot’s body frame  -->
+        <!-- robot assumes that your robot’s world frame origin is at the specified latitude and longitude and with a heading of 0 (east).-->
+        <remap from="odometry/filtered" to="/odometry/filtered_map"/>
+        <remap from="gps/fix" to="/GPS/ublox_gps/fix"/>
+	<remap from="imu/data" to="/imu"/>
+    </node>
+
+
+</launch>

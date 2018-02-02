@@ -1,0 +1,12 @@
+Useful Links
+	outdoor map:
+		rviz_satellite:
+			https://github.com/gareth-cross/rviz_satellite
+		Zoom levels:
+			http://wiki.openstreetmap.org/wiki/Zoom_levels
+		mapbox:
+			https://www.mapbox.com/
+	Razor sensor calibration:
+		http://wiki.ros.org/razor_imu_9dof
+		# note: 7.Sensor Calibration
+

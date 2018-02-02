@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<launch>
+    <arg name="use_teb" default="true" />
+    <arg name="use_enc" default="false" />
+    <arg name="VtoRPM"  default="1660" />
+
+    <!-- TF setting -->
+    <include file="$(find lynmax)/launch/includes/racecar_tf.launch.xml" />
+    <!-- RPLidar -->
+    <include file="$(find lynmax)/launch/includes/rplidar.launch.xml" />
+    <!-- IMU -->
+    <include file="$(find lynmax)/launch/includes/gy85.launch.xml" />
+    <!-- base -->
+    <include file="$(find lynmax)/launch/includes/base_control.launch.xml"  >
+		<arg name="use_teb" value="$(arg use_teb)"/>
+		<arg name="VtoRPM" value="$(arg VtoRPM)"/>
+    </include>
+
+    <!-- ODOMETRY -->
+    <!--rf2o_Laser_Odometry-->
+    <include file="$(find lynmax)/launch/includes/rf2o.launch.xml" />
+    <!-- Robot_Localization -->
+    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_se" clear_params="true">
+        <rosparam command="load" file="$(find lynmax)/launch/param/laser_imu_encoder_ekf.yaml" if="$(arg use_enc)"/>
+        <rosparam command="load" file="$(find lynmax)/launch/param/laser_imu_ekf.yaml" unless="$(arg use_enc)"/>
+    </node>
+</launch>

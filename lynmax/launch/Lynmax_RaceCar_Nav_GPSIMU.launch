@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+
+<launch>
+    <!-- ********* -->    
+    <!-- arguments -->
+    <!-- ********* -->
+    <arg name="use_rviz" default="false" />
+    <arg name="use_teb" default="true" />
+    <arg name="use_enc"  default="false" />
+    <arg name="VtoRPM"   default="1660" />
+
+
+    <!-- ************ -->
+    <!-- Localization -->
+    <!-- ************ -->
+    <!-- Map server -->
+    <node name="map_server" pkg="map_server" type="map_server" args="$(find lynmax)/map/test1108/map.yaml">
+    </node>    
+
+    <!-- Odom EKF -->
+    <include file="$(find lynmax)/launch/includes/laser_odom_ekf.launch.xml" >
+    	<arg name="use_teb" value="$(arg use_teb)"/>
+        <arg name="use_enc" value="$(arg use_enc)"/>
+        <arg name="VtoRPM"  value="$(arg VtoRPM)"/>
+    </include>
+
+    <!-- ******** -->
+    <!-- Navstack -->
+    <!-- ******** -->
+    <!-- move_base -->
+    <node pkg="move_base" type="move_base" respawn="true" name="move_base" output="screen" > <!--output="screen"-->
+        <!--rosparam file="$(find lynmax)/launch/param/outdoor/costmap_common_params.yaml" command="load" ns="global_costmap" />
+        <rosparam file="$(find lynmax)/launch/param/outdoor/costmap_common_params.yaml" command="load" ns="local_costmap" /-->
+        <rosparam file="$(find lynmax)/launch/param/outdoor/local_costmap_params.yaml" command="load" />
+        <rosparam file="$(find lynmax)/launch/param/outdoor/global_costmap_params.yaml" command="load" />
+        <rosparam file="$(find lynmax)/launch/param/outdoor/move_base_params.yaml" command="load" />
+
+        <!--rosparam file="$(find lynmax)/launch/param/outdoor/base_local_planner_params.yaml" command="load" />      
+        <param name="base_global_planner" type="string" value="navfn/NavfnROS" />
+        <param name="base_local_planner" value="base_local_planner/TrajectoryPlannerROS"/-->
+        <rosparam file="$(find lynmax)/launch/param/teb_local_planner_params.yaml" command="load" if="$(arg use_teb)" />
+        <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" if="$(arg use_teb)" />
+        <param name="controller_frequency" value="15.0" if="$(arg use_teb)" />
+        <param name="controller_patience" value="15.0" if="$(arg use_teb)" />
+
+        <remap from="odom" to="/odometry/filtered_map" />
+    </node>
+
+    <!-- L1 controller -->  
+    <node pkg="lynmax" type="L1_controller_v2" respawn="false" name="L1_controller_v2" output="screen" unless="$(arg use_teb)" >       
+        <!-- L1 -->
+        <param name="Vcmd" value="1" /> <!-- speed of car m/s -->        
+        <!-- ESC -->
+        <param name="baseSpeed" value="0.6"/> <!-- m/s --> 
+        <!-- Servo -->
+        <param name="baseAngle" value="0"/> <!-- the middle pos of servo -->
+        <param name="AngleGain" value="-2.2"/> <!-- for tt02: >0, for hsp: <0 -->		
+        <remap from="/move_base_node/NavfnROS/plan" to="/move_base/NavfnROS/plan" /> 
+    </node>    
+
+    <!-- Rviz -->
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find lynmax)/rviz_cfg/hypha_nav.rviz" if="$(arg use_rviz)" />
+</launch>
